@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Valentín ❤️</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,6 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* Evita desplazamientos en iPhone */
         }
         .card {
             background: rgba(255, 245, 235, 0.95);
@@ -68,9 +67,6 @@
         .no {
             background-color: #555;
             color: white;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
             transition: transform 0.2s ease, opacity 0.3s ease, left 0.2s, top 0.2s;
         }
         .no:hover {
@@ -94,7 +90,7 @@
     
     <div class="buttons">
         <button class="yes" onclick="showCelebration()">Siii 🥳</button>
-        <button class="no" id="noButton">No, pq te odio</button>
+        <button class="no" id="noButton" onclick="moveNoButton()">No, pq te odio</button>
     </div>
     <p id="question" style="font-size: 18px; margin-top: 20px;"></p>
 </div>
@@ -126,19 +122,24 @@
             let buttonRect = noButton.getBoundingClientRect();
             let parentRect = noButton.parentElement.getBoundingClientRect();
 
-            let maxMoveX = 200;
-            let maxMoveY = 100;
+            let maxMoveX = 400; // Mucho más movimiento en X
+            let maxMoveY = 300; // Mucho más movimiento en Y
 
-            let newX = Math.random() * (parentRect.width - buttonRect.width);
-            let newY = Math.random() * (parentRect.height - buttonRect.height);
+            let newX = buttonRect.left + (Math.random() * maxMoveX - maxMoveX / 2); // Se mueve entre -200px y +200px
+            let newY = buttonRect.top + (Math.random() * maxMoveY - maxMoveY / 2); // Se mueve entre -150px y +150px
 
-            noButton.style.left = `${newX}px`;
-            noButton.style.top = `${newY}px`;
+            // Verifica que no se salga del área del contenedor
+            newX = Math.max(parentRect.left + 10, Math.min(parentRect.right - buttonRect.width - 10, newX));
+            newY = Math.max(parentRect.top + 10, Math.min(parentRect.bottom - buttonRect.height - 10, newY));
 
-            let newSize = Math.max(18 - index * 2, 8);
+            noButton.style.left = `${newX - parentRect.left}px`;
+            noButton.style.top = `${newY - parentRect.top}px`;
+
+            // Reducir el tamaño y opacidad gradualmente
+            let newSize = Math.max(18 - index * 2, 0);
             noButton.style.fontSize = `${newSize}px`;
-            noButton.style.padding = `${Math.max(10 - index, 5)}px ${Math.max(20 - index * 2, 10)}px`;
-            noButton.style.opacity = Math.max(1 - index * 0.15, 0.1);
+            noButton.style.padding = `${Math.max(10 - index, 0)}px ${Math.max(20 - index * 2, 0)}px`;
+            noButton.style.opacity = Math.max(1 - index * 0.15, 0);
         }
 
         if (index >= questions.length) {
@@ -150,10 +151,6 @@
         document.getElementById("mainContainer").classList.add("hidden");
         document.getElementById("celebrationContainer").classList.remove("hidden");
     }
-
-    // Solucionar problema de selección en iPhone agregando touchstart
-    noButton.addEventListener("touchstart", moveNoButton);
-    noButton.addEventListener("click", moveNoButton);
 </script>
 
 </body>
