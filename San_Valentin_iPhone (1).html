@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>San Valentín ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ffccd5, #ffb3c6);
+            color: #5a3e36;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden; /* Evita desplazamientos en iPhone */
+        }
+        .card {
+            background: rgba(255, 245, 235, 0.95);
+            border: 5px solid #d4af37;
+            border-radius: 15px;
+            padding: 30px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 42px;
+            color: #b22222;
+        }
+        p {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+        .buttons {
+            margin-top: 30px;
+            position: relative;
+            height: 100px;
+        }
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 10px;
+            font-family: 'Playfair Display', serif;
+            transition: all 0.3s ease;
+            position: absolute;
+        }
+        .yes {
+            background-color: #b22222;
+            color: white;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .yes:hover {
+            background-color: #8b0000;
+            transform: scale(1.1);
+        }
+        .no {
+            background-color: #555;
+            color: white;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: transform 0.2s ease, opacity 0.3s ease, left 0.2s, top 0.2s;
+        }
+        .no:hover {
+            background-color: #777;
+        }
+        .hidden {
+            display: none;
+        }
+        .celebration img {
+            width: 250px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="mainContainer" class="card">
+    <h1>Fe, ¿querés pasar San Valentín conmigo? ❤️</h1>
+    <p>Este 14 de febrero tengo ganas de que la pasemos juntos.  
+    No hay nadie más con quien quiera estar en este día más que con vos.</p>
+    
+    <div class="buttons">
+        <button class="yes" onclick="showCelebration()">Siii 🥳</button>
+        <button class="no" id="noButton">No, pq te odio</button>
+    </div>
+    <p id="question" style="font-size: 18px; margin-top: 20px;"></p>
+</div>
+
+<div id="celebrationContainer" class="card hidden">
+    <h1>¡Vamos a pasar un muy buen día!</h1>
+    <p>Te amo, va a ser hermoso 💕</p>
+    <img src="https://i.gifer.com/F0rJ.gif" alt="Ross Lynch festejando">
+</div>
+
+<script>
+    let noButton = document.getElementById("noButton");
+    let questions = [
+        "¿Por qué no? 😢", 
+        "¿No me querés más? 💔", 
+        "¿Pensalo porfa? 🥺", 
+        "Dale, no te ortives 😭",
+        "¿Pero en serio?", 
+        "Dale Fe, no me hagas esto 😭", 
+        "Bueno... si eso querés 💔"
+    ];
+    let index = 0;
+
+    function moveNoButton() {
+        if (index < questions.length) {
+            document.getElementById("question").innerText = questions[index];
+            index++;
+
+            let buttonRect = noButton.getBoundingClientRect();
+            let parentRect = noButton.parentElement.getBoundingClientRect();
+
+            let maxMoveX = 200;
+            let maxMoveY = 100;
+
+            let newX = Math.random() * (parentRect.width - buttonRect.width);
+            let newY = Math.random() * (parentRect.height - buttonRect.height);
+
+            noButton.style.left = `${newX}px`;
+            noButton.style.top = `${newY}px`;
+
+            let newSize = Math.max(18 - index * 2, 8);
+            noButton.style.fontSize = `${newSize}px`;
+            noButton.style.padding = `${Math.max(10 - index, 5)}px ${Math.max(20 - index * 2, 10)}px`;
+            noButton.style.opacity = Math.max(1 - index * 0.15, 0.1);
+        }
+
+        if (index >= questions.length) {
+            noButton.classList.add("hidden");
+        }
+    }
+
+    function showCelebration() {
+        document.getElementById("mainContainer").classList.add("hidden");
+        document.getElementById("celebrationContainer").classList.remove("hidden");
+    }
+
+    // Solucionar problema de selección en iPhone agregando touchstart
+    noButton.addEventListener("touchstart", moveNoButton);
+    noButton.addEventListener("click", moveNoButton);
+</script>
+
+</body>
+</html>
